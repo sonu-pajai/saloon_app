@@ -31,7 +31,8 @@ gem "stimulus-rails"
 gem "redis", "~> 4.0"
 gem 'activeadmin', github: 'tagliala/activeadmin', branch: 'feature/railties-7' # FIXME: revert to stable
 gem 'devise'
-gem 'devise-jwt', '~> 0.5.8'
+gem 'devise-jwt'
+# , '~> 0.5.8'
 gem 'rack-cors'
 gem 'sidekiq'
 gem 'rest-client'

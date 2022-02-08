@@ -4,12 +4,16 @@ class SessionsController < Devise::SessionsController
   private
 
   def respond_with(resource, _opts = {})
-    render json: {
-      auth: {
-        token: "Bearer #{request.env['warden-jwt_auth.token']}",
-        timestamp: Time.now.strftime("%Y-%m-%dT%H:%M:%S.%L%z")
-      }
-    }, status: :ok
+   if current_user
+      render json: {
+        auth: {
+          token: "Bearer #{request.env['warden-jwt_auth.token']}",
+          timestamp: Time.now.strftime("%Y-%m-%dT%H:%M:%S.%L%z")
+        }
+      }, status: :ok
+    else
+      render json: { message: "Authorization Failure"}, status: :unauthorized
+    end
   end
 
   def respond_to_on_destroy

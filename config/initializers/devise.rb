@@ -9,17 +9,6 @@
 # Use this hook to configure devise mailer, warden hooks and so forth.
 # Many of these configuration options can be set straight in your model.
 Devise.setup do |config|
-  config.jwt do |jwt|
-    # jwt.secret = ENV['DEVISE_SECRET_KEY']
-    jwt.secret = "766a3ce5f94081a1f5ee971a9e1ca6e2d39ac4a735095b512aa6fe2f50b78ddaf78125511a8d355b359986ec05dd548beb6957acef510e0604b872a580766117"
-    jwt.dispatch_requests = [
-        ['POST', %r{^/login$}]
-      ]
-      jwt.revocation_requests = [
-        ['DELETE', %r{^/logout$}]
-      ]
-    jwt.expiration_time = 5.minutes.to_i
-  end
   # The secret key used by Devise. Devise uses this key to generate
   # random tokens. Changing this key will render invalid all existing
   # confirmation, reset password and unlock tokens in the database.
@@ -319,4 +308,17 @@ Devise.setup do |config|
   # When set to false, does not sign a user in automatically after their password is
   # changed. Defaults to true, so a user is signed in automatically after changing a password.
   # config.sign_in_after_change_password = true
+  config.jwt do |jwt|
+    # jwt.secret = ENV['DEVISE_SECRET_KEY']
+    jwt.secret = Rails.application.credentials.devise[:jwt_secret_key]
+    jwt.dispatch_requests = [
+        ['POST', %r{^/login$}]
+      ]
+      jwt.revocation_requests = [
+        ['DELETE', %r{^/logout$}]
+      ]
+    jwt.expiration_time = 100.minutes.to_i
+  end
+  config.skip_session_storage = [:http_auth, :params_auth]
+  # config.navigational_formats = []
 end
