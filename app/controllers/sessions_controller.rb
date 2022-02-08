@@ -4,29 +4,27 @@ class SessionsController < Devise::SessionsController
   private
 
   def respond_with(resource, _opts = {})
-   if current_user
+    if current_user
       render json: {
-        auth: {
-          token: "Bearer #{request.env['warden-jwt_auth.token']}",
-          timestamp: Time.now.strftime("%Y-%m-%dT%H:%M:%S.%L%z")
-        }
+        message: 'Logged in sucessfully.',
+        data: UserSerializer.new(resource, params: {token: "Bearer #{request.env['warden-jwt_auth.token']}"}).serializable_hash[:data][:attributes]
       }, status: :ok
     else
-      render json: { message: "Authorization Failure"}, status: :unauthorized
+      render json: {
+        error: "Authorization Failure."
+      }, status: :unauthorized
     end
   end
 
   def respond_to_on_destroy
-    log_out_success && return if current_user
-
-    log_out_failure
-  end
-
-  def log_out_success
-    render json: { message: "You are logged out Successful." }, status: :ok
-  end
-
-  def log_out_failure
-    render json: { message: " Logged out Unsuccessful."}, status: :unauthorized
+    if current_user
+      render json: {
+        message: "Logged out successfully"
+      }, status: :ok
+    else
+      render json: {
+        error: "Couldn't find an active session."
+      }, status: :unauthorized
+    end
   end
 end
