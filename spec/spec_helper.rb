@@ -12,8 +12,16 @@
 # the additional setup, and require it from the spec files that actually need
 # it.
 #
-# See https://rubydoc.info/gems/rspec-core/RSpec/Core/Configuration
+# See http://rubydoc.info/gems/rspec-core/RSpec/Core/Configuration
+require 'rails_helper'
+# require "paperclip/matchers"
+# require 'webmock/rspec'
+# require 'vcr'
+# require 'aasm/rspec'
+
+
 RSpec.configure do |config|
+  # config.include Paperclip::Shoulda::Matchers #paper clip matcher
   # rspec-expectations config goes here. You can use an alternate
   # assertion/expectation library such as wrong or the stdlib/minitest
   # assertions if you prefer.
@@ -37,6 +45,12 @@ RSpec.configure do |config|
     mocks.verify_partial_doubles = true
   end
 
+  # VCR.configure do |config|
+  #   config.cassette_library_dir = 'spec/cassettes'
+  #   config.hook_into :webmock # or :fakeweb
+  #   config.configure_rspec_metadata!
+  #   config.allow_http_connections_when_no_cassette = true
+  # end
   # This option will default to `:apply_to_host_groups` in RSpec 4 (and will
   # have no way to turn it off -- the option exists only for backwards
   # compatibility in RSpec 3). It causes shared context metadata to be
@@ -61,7 +75,9 @@ RSpec.configure do |config|
 
   # Limits the available syntax to the non-monkey patched syntax that is
   # recommended. For more details, see:
-  # https://relishapp.com/rspec/rspec-core/docs/configuration/zero-monkey-patching-mode
+  #   - http://rspec.info/blog/2012/06/rspecs-new-expectation-syntax/
+  #   - http://www.teaisaweso.me/blog/2013/05/27/rspecs-new-message-expectation-syntax/
+  #   - http://rspec.info/blog/2014/05/notable-changes-in-rspec-3/#zero-monkey-patching-mode
   config.disable_monkey_patching!
 
   # Many RSpec users commonly either run the entire suite or an individual
