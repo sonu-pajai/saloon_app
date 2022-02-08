@@ -12,7 +12,7 @@ RSpec.describe SessionsController, type: :controller do
 
         res = JSON.parse(response.body)
 
-        expect(res['auth']['token']).to be_present
+        expect(res['data']['token']).to be_present
         expect(response.status).to eq 200
       end
     end
