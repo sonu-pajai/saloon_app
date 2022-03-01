@@ -1,5 +1,4 @@
 class ServicesController < ApplicationController
-  before_action :authenticate_user!
 
   before_action :set_company
 
@@ -14,11 +13,8 @@ class ServicesController < ApplicationController
   # end
 
   def index
-    sort_by = (params[:sort_by] || "price").to_sym
-    sort_order = params[:sort_order] || "asc"
-    services = @company.services.select(:id, :name, :price, :time, :company_id).where('name LIKE ?', "%#{params[:query]}%").order(sort_by => sort_order).paginate(page: params[:page] || 1, per_page: 30)
-    time_slots = TimeSlot.select(:id, :from_time).where(id: @company.start_time_id..@company.end_time_id)
-    render json: {data: {services: services, slots: time_slots}}
+    query = ListCompanyServicesQuery.new(@company, params)
+    render json: {data: {services: query.services, all_slots: query.all_slots, booked_slots: query.booked_slots}}
   end
 
   private

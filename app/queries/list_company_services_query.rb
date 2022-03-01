@@ -12,7 +12,7 @@ class ListCompanyServicesQuery
       paginate(page: @params[:page] || 1, per_page: 30)
   end
 
-  def all_time_slots
+  def all_slots
     TimeSlot.select("id, from_time as slot_time").where(id: @company.start_time_id..@company.end_time_id)
   end
 
