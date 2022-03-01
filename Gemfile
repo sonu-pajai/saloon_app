@@ -37,6 +37,7 @@ gem 'rack-cors'
 gem 'sidekiq'
 gem 'rest-client'
 gem 'fast_jsonapi'
+gem 'will_paginate'
 
 # gem 'arbre', github: 'activeadmin/arbre' # FIXME: remove
 # gem 'inherited_resources', github: 'activeadmin/inherited_resources' # FIXME: remove

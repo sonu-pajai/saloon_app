@@ -1,9 +1,15 @@
 class User < ApplicationRecord
   devise :database_authenticatable,
          :jwt_authenticatable,
-         jwt_revocation_strategy: JwtDenylist
+          :registerable,
+        jwt_revocation_strategy: JwtDenylist
+
 
   default_scope -> { where(is_active: true) }
 
+  # has_many :appointments
+
+  validates :name, :phone_number, presence: true
+  validates :phone_number, :email, uniqueness: true
 
 end

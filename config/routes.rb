@@ -6,13 +6,15 @@ Rails.application.routes.draw do
                 sign_out: 'logout'
               },
               controllers: {
-                sessions: 'sessions'
+                sessions: 'sessions',
+                registrations: 'registrations'
               },
               defaults: { format: :json }
 
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
   # Defines the root path route ("/")
   # root "users#show"
-  get '/member-data', to: 'members#show'
-
+  resources :companies
+  resources :services
+  resources :appointments
 end
