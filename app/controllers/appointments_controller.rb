@@ -11,7 +11,7 @@ class AppointmentsController < ApplicationController
   def create
     appointment = current_user.appointments.build(appointment_params)
     if appointment.save
-      render json: {data: "Appointment with 00#{appointment.id} ID created successfully"}
+      render json: {message: "Appointment with 00#{appointment.id} ID created successfully"}
     else
       render json: {error: appointment.errors.full_messages}, status: :unprocessable_entity
     end
@@ -19,7 +19,7 @@ class AppointmentsController < ApplicationController
 
   def cancel_appointment
     if @appointment.update(status:  Appointment.statuses[:cancelled])
-      render json: {data: "Appointment #{@appointment.status} successfully"}
+      render json: {message: "Appointment #{@appointment.status} successfully"}
     else
       render json: {error: @appointment.errors.full_messages}, status: :unprocessable_entity
     end
@@ -32,17 +32,17 @@ class AppointmentsController < ApplicationController
   end
 
   def set_company
-    @company = Company.find_by(id: params[:company_id])
+    @company = Company.find_by(id: appointment_params[:company_id])
     render json: {errors: "Company not found"}, status: 422 and return if @company.blank?
   end
 
   def set_service
-    service = @company.services.find_by(id: params[:service_id])
+    service = @company.services.find_by(id: appointment_params[:service_id])
     render json: {errors: "Service not found"}, status: 422 and return if service.blank?
   end
 
   def find_appointment
-    @appointment = User.first.appointments.find_by(id: params[:id])
+    @appointment = User.first.appointments.find_by(id: appointment_params[:id])
     render json: {errors: "Appointment not found"}, status: 422 and return if @appointment.blank?
   end
 

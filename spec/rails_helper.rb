@@ -63,7 +63,7 @@ RSpec.configure do |config|
       raise "There are pending migrations, run RAILS_ENV=test bin/rake db:migrate"
     end
 
-    # DatabaseCleaner.strategy = :truncation
+    DatabaseCleaner.strategy = :truncation
     # DatabaseCleaner[:mongoid].strategy = :truncation
   end
 
