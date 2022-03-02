@@ -3,7 +3,7 @@ class ServicesController < ApplicationController
 
   def index
     query = ListCompanyServicesQuery.new(@company, params)
-    render json: {data: {services: query.services, all_slots: query.all_slots, booked_slots: query.booked_slots}}
+    render json: {data: {services: query.services, slots: query.all_slots, booked_slots: query.booked_slots}}
   end
 
   # def create

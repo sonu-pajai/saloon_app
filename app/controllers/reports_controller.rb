@@ -1,5 +1,6 @@
 class ReportsController < ApplicationController
   before_action :authenticate_user!
+  before_action :authenticate_admin!
   before_action :set_company, only: :monthly_reports
 
   def monthly_reports
