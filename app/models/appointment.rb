@@ -1,5 +1,5 @@
 class Appointment < ApplicationRecord
-  enum status: [:confirm, :completed, :cancelled ]
+  enum status: [:confirmed, :completed, :cancelled ]
 
   belongs_to :company
   belongs_to :service
@@ -43,15 +43,22 @@ class Appointment < ApplicationRecord
     ActiveRecord::Base.connection.exec_query(query)
   end
 
-
-  def self.filter_appointments(company:, start_date: Date.today, end_date: Date.today+7.days, statuses: nil)
-    status_condition = statuses.present? ? "AND ap.status in (#{statuses})" : ""
+  def self.slot_wise_appointments(company:, start_date: Date.today, end_date: Date.today+7.days, statuses: nil)
+    status_condition = statuses.present? ? "AND ap.status in (#{statuses.join(",")})" : ""
     chairs = company.chairs || 0
-    query = "SELECT Agg.id as slot_id, Agg.from_time as start_time, Agg.date, COUNT(*) as total_bookings, #{chairs}-COUNT(*) as available_bookings
-      FROM(SELECT ts.from_time, ts.to_time, ts.id, ap.date FROM appointments as ap CROSS JOIN time_slots as ts
-      WHERE ts.id >= ap.start_time_id AND ts.id <= ap.end_time_id AND ap.date between '#{start_date}' AND '#{end_date}'  ) as Agg
+    query = "select Agg.id as slot_id, Agg.from_time as start_time, Agg.date, COUNT(*) as total_bookings, #{chairs}-COUNT(*) as available_bookings
+      FROM(select ts.from_time, ts.to_time, ts.id, ap.date FROM appointments as ap CROSS JOIN time_slots as ts
+      WHERE ap.company_id= #{company.id} AND ts.id >= ap.start_time_id AND ts.id <= ap.end_time_id AND ap.date between '#{start_date}' AND '#{end_date}' #{status_condition} ) as Agg
       GROUP BY Agg.id, Agg.date"
     ActiveRecord::Base.connection.exec_query(query)
+  end
+
+  def self.status_wise_appointments(company:, start_date:, end_date:, statuses:)
+    Appointment.joins(:service)
+    .joins("INNER JOIN time_slots t1 ON t1.id = appointments.start_time_id")
+    .joins("INNER JOIN time_slots t2 ON t2.id = appointments.end_time_id")
+    .select("appointments.id, services.price, appointments.date, appointments.start_time_id, appointments.end_time_id, t1.from_time as s_time, t2.to_time as e_time")
+    .where("appointments.company_id": company.id, "appointments.status": statuses, "appointments.date": start_date..end_date)
   end
 
 end

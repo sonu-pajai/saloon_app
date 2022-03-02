@@ -17,7 +17,7 @@ class ListCompanyServicesQuery
   end
 
   def booked_slots
-    statuses = [Appointment.statuses[:confirm], Appointment.statuses[:completed]]
-    Appointment.filter_appointments(company: @company, statuses: statuses)
+    statuses = [Appointment.statuses[:confirmed], Appointment.statuses[:completed]]
+    Appointment.slot_wise_appointments(company: @company, statuses: statuses)
   end
 end

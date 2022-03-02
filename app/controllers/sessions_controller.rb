@@ -6,12 +6,12 @@ class SessionsController < Devise::SessionsController
   def respond_with(resource, _opts = {})
     if current_user
       render json: {
-        message: 'Logged in sucessfully.',
+        message: 'Logged in sucessfully',
         data: UserSerializer.new(resource, params: {token: "Bearer #{request.env['warden-jwt_auth.token']}"}).serializable_hash[:data][:attributes]
       }, status: :ok
     else
       render json: {
-        error: "Authorization Failure."
+        error: "Authorization Failure"
       }, status: :unauthorized
     end
   end

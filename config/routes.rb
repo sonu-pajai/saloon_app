@@ -11,10 +11,18 @@ Rails.application.routes.draw do
               },
               defaults: { format: :json }
 
-  # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
-  # Defines the root path route ("/")
-  # root "users#show"
-  resources :companies
-  resources :services
-  resources :appointments
+  resources :services, only: [:index]
+
+  resources :companies, only: [:index] do
+    member do
+      put "cancel" => "appointments#cancel_appointment"
+    end
+  end
+  resources :appointments, only: [:create, :index] do
+    member do
+      put "cancel" => "appointments#cancel_appointment"
+    end
+  end
+  get "monthly-report" => "reports#monthly_reports"
+
 end

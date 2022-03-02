@@ -1,3 +1,4 @@
+
 #generate time slots
 # i=1
 slots = []
@@ -30,11 +31,12 @@ end
 user = User.create(name: "raj", email: "sonupajai22@gmail.com", phone_number: '9090990099', password: "Sonal@2210")
 
 Appointment.create(
-  date: Date.today,
+  date: Date.today+1.day,
   company: Company.first,
   service: Service.first,
   user: User.first,
-  start_time: TimeSlot.second, 
+  start_time: TimeSlot.fifth, 
+  status: 2
 )
 
 

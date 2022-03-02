@@ -7,7 +7,7 @@ class User < ApplicationRecord
 
   default_scope -> { where(is_active: true) }
 
-  # has_many :appointments
+  has_many :appointments, dependent: :destroy
 
   validates :name, :phone_number, presence: true
   validates :phone_number, :email, uniqueness: true
