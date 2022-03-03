@@ -12,12 +12,8 @@ Rails.application.routes.draw do
               defaults: { format: :json }
 
   resources :services, only: [:index]
+  resources :companies, only: [:index]
 
-  resources :companies, only: [:index] do
-    member do
-      put "cancel" => "appointments#cancel_appointment"
-    end
-  end
   resources :appointments, only: [:create, :index] do
     member do
       put "cancel" => "appointments#cancel_appointment"

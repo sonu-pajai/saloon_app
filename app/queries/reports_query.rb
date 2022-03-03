@@ -22,19 +22,20 @@ class ReportsQuery
 
   def cancelled_appointments
     cancelled = Appointment.status_wise_appointments(company: @company, start_date: @params["start_date"], end_date: @params["end_date"], statuses: [Appointment.statuses[:confirmed], Appointment.statuses[:cancelled]]).as_json
-    cancelled = cancelled.reject! { |app|
-      ab = @data[:completed_appointments].find{ |a|
+    cancelled.reject! { |app|
+      @data[:completed_appointments].find{ |a|
         range = (a["start_time_id"]..a["end_time_id"])
         a["date"] == app["date"] && (range.include?(app["start_time_id"]) || range.include?(app["start_time_id"]))
       }
-    }
+    } if @data[:completed_appointments]
+    cancelled
   end
 
   def total_revenue_earned
-    @data[:completed_appointments].inject(0) {|sum, hash| sum + hash["price"].to_f}
+    @data[:completed_appointments]&.inject(0) {|sum, hash| sum + hash["price"].to_f}
   end
 
   def total_revenue_lost
-    @data[:cancelled_appointments].inject(0) {|sum, hash| sum + hash["price"].to_f}
+    @data[:cancelled_appointments]&.inject(0) {|sum, hash| sum + hash["price"].to_f}
   end
 end

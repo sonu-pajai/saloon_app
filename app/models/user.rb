@@ -1,6 +1,6 @@
 class User < ApplicationRecord
 
-  enum role: [:admin, :customer, :sadmin ]
+  enum role: [:customer, :admin ]
 
   devise :database_authenticatable,
          :jwt_authenticatable,

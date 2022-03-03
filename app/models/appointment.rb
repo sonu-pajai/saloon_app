@@ -8,9 +8,10 @@ class Appointment < ApplicationRecord
   belongs_to :end_time, class_name: :TimeSlot
 
   validates :date, presence: true
-  validate  :validate_timeslot, :validate_overlapping_appointment
 
   before_validation :set_end_time
+  validate :validate_timeslots, :validate_overlapping
+
 
   def set_end_time
     time_in_minutes = service.time #time required for service
@@ -19,14 +20,14 @@ class Appointment < ApplicationRecord
     self.end_time = TimeSlot.find_by(id: start_time.id+slots)
   end
 
-  def validate_timeslot
+  def validate_timeslots
     ids = TimeSlot.where(id: company.start_time_id..company.end_time_id).ids
     errors.add(:appointment, "start time invalid") unless ids.include?(company.start_time_id)
     errors.add(:appointment, "end time invalid") unless ids.include?(company.end_time_id)
   end
 
-  def validate_overlapping_appointment
-    errors.add(:appointment, "slot overlapping") if datetime_wise_appointments&.find {|ap| ap["total_bookings"] >= company.chairs }
+  def validate_overlapping
+    errors.add(:appointment, "slots overlapping") if datetime_wise_appointments&.find {|ap| ap["total_bookings"] >= company.chairs }
   end
 
   def datetime_wise_appointments

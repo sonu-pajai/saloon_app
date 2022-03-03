@@ -10,11 +10,11 @@ class ApplicationController < ActionController::Base
   protected
 
   def invalid_authentication
-    render_api_error("Forbidden", 403) and return
+    render_api_error("Access Denied", 403) and return
   end
 
   def render_api_error(error, status_code)
-    render json: {error: error}, status: 403
+    render json: {errors: error}, status: 403
   end
 
   def configure_permitted_parameters
